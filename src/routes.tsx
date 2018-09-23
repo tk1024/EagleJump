@@ -1,11 +1,11 @@
 import * as React from "react"
 import {BrowserRouter as Router, Route} from "react-router-dom"
 
-import {SortIndex} from "./pages/sort";
-import {TopIndex} from "./pages/top/index"
+import {SortIndex} from "./pages/sort"
+import {TopIndex} from "./pages/top"
 
 const Routes = () => (
-  <Router>
+  <Router basename="/EagleJump/">
     <div>
       <Route path="/" exact={true} component={TopIndex}/>
       <Route path="/sort" exact={true} component={SortIndex}/>

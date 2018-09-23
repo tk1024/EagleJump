@@ -1,30 +1,46 @@
 {
   "name": "EagleJump",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://tk1024.github.io/EagleJump",
   "dependencies": {
-    "@types/react-router-dom": "^4.2.7",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.7",
+    "@fortawesome/free-solid-svg-icons": "^5.4.2",
+    "@fortawesome/react-fontawesome": "^0.1.3",
+    "@types/react-router-dom": "^4.3.1",
+    "axios": "^0.18.0",
+    "i": "^0.3.6",
+    "npm": "^6.4.1",
+    "qs": "^6.5.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-redux": "^5.1.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.16.0"
+    "react-scripts-ts": "2.16.0",
+    "redux": "^4.0.1",
+    "styled-components": "^3.4.10"
   },
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "predeploy": "npm run build",
+    "tslint-check": "tslint-config-prettier-check ./tslint.json",
+    "precommit": "pretty-quick --staged"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.4",
-    "@types/node": "^10.5.2",
+    "@types/jest": "^23.3.7",
+    "@types/node": "^10.12.0",
     "@types/qs": "^6.5.1",
-    "@types/react": "^16.4.6",
-    "@types/react-dom": "^16.0.6",
-    "axios": "^0.18.0",
-    "bootstrap-honoka": "^4.0.0",
-    "qs": "^6.5.2",
-    "styled-components": "^3.3.3",
+    "@types/react": "^16.4.18",
+    "@types/react-dom": "^16.0.9",
+    "@types/react-redux": "^6.0.9",
+    "bootstrap-honoka": "^4.1.3",
+    "gh-pages": "^1.2.0",
+    "husky": "^1.1.2",
+    "prettier": "^1.14.3",
+    "pretty-quick": "^1.8.0",
     "typescript": "^2.9.2"
   }
 }

@@ -1,30 +1,29 @@
 export interface IStorage {
-  getItem<T>(key: string): T[];
+  getItem<T>(key: string): T | null
 
-  setItem<T>(key: string, data: T): void;
+  setItem<T>(key: string, data: T): void
 }
 
 export class LocalStorage implements IStorage {
-  public getItem<T>(key: string): T[] {
+  public getItem<T>(key: string): T | null {
     if (!localStorage) {
-      return [];
+      return null
     }
     try {
-      const o: any[] = JSON.parse(localStorage.getItem(key) || "[]" as string);
-      return o;
+      return JSON.parse(localStorage.getItem(key) || ("[]" as string)) as T
     } catch (e) {
-      return [];
+      return null
     }
   }
 
   public setItem<T>(key: string, data: T) {
     if (!localStorage) {
-      return;
+      return
     }
     try {
-      localStorage.setItem(key, JSON.stringify(data));
+      localStorage.setItem(key, JSON.stringify(data))
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 }
