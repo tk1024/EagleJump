@@ -38,4 +38,8 @@ export default class LoginToken {
     })
     this.storage.setItem(key, dataWithSetTime)
   }
+
+  public removeTokne() {
+    this.storage.removeItem(key)
+  }
 }

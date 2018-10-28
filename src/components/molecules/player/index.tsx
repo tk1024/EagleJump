@@ -19,6 +19,13 @@ class Component extends React.Component<IProps, IState> {
     super(props)
   }
 
+  public componentDidUpdate() {
+    // TODO: タイトル更新用のReduxのアレをアレするようにする
+    if (this.props.player) {
+      document.title = `${this.props.player.title} - EagleJump`
+    }
+  }
+
   public render() {
     if (!this.props.player) {
       return <></>

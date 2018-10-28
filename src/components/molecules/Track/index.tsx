@@ -5,6 +5,7 @@ import { Dispatch } from "redux"
 import { connect } from "react-redux"
 import { selectedSong } from "../../../actions/player"
 import { TrackThumbnail } from "../../atoms/track-thumbnail"
+import Color from "../../../style/const/color"
 
 class Component extends React.Component<ITrack, {}> {
   constructor(props: any) {
@@ -85,7 +86,6 @@ const ThumbnailWrapper = styled.div`
   position: relative;
   width: 150px;
   height: 150px;
-  border: 1px solid #eee;
   box-sizing: content-box;
   margin-bottom: 4px;
 `
@@ -102,7 +102,7 @@ const Duration = styled.div`
 
 const Title = styled.div`
   font-size: 12px;
-  color: #444;
+  color: ${Color.WHITE};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -110,7 +110,7 @@ const Title = styled.div`
 
 const Username = styled.div`
   font-size: 10px;
-  color: #888;
+  color: ${Color.GRAY}
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

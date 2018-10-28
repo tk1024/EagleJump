@@ -1,7 +1,7 @@
 export interface IStorage {
   getItem<T>(key: string): T | null
-
   setItem<T>(key: string, data: T): void
+  removeItem<T>(key: string): void
 }
 
 export class LocalStorage implements IStorage {
@@ -25,5 +25,9 @@ export class LocalStorage implements IStorage {
     } catch (e) {
       console.log(e)
     }
+  }
+
+  public removeItem(key: string) {
+    localStorage.removeItem(key)
   }
 }

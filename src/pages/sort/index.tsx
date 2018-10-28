@@ -4,9 +4,13 @@ import { Track } from "../../components/molecules/Track"
 import SoundCloud from "../../lib/SoundCloud4ts/singleton"
 import { Player } from "../../components/molecules/player"
 import { ITrack } from "../../interface/track"
+import { Header } from "./components/header"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSpinner } from "@fortawesome/free-solid-svg-icons"
 
 interface IState {
   tracks: ITrack[]
+  isLoading: boolean
 }
 
 interface IRes {
@@ -26,6 +30,7 @@ export class SortIndex extends React.Component<{}, IState> {
     }
     this.state = {
       tracks: [],
+      isLoading: true,
     }
   }
 
@@ -34,13 +39,32 @@ export class SortIndex extends React.Component<{}, IState> {
   }
 
   public render() {
+    if (this.state.isLoading) {
+      return (
+        <>
+          <Header />
+          <Wrapper>
+            <Loading>
+              <div>
+                <FontAwesomeIcon icon={faSpinner} spin={true} />
+              </div>
+              <LoadingText>楽曲読み込み中・・・</LoadingText>
+            </Loading>
+          </Wrapper>
+        </>
+      )
+    }
+
     return (
-      <Wrapper>
-        {this.state.tracks.map(track => (
-          <Track key={track.id} {...track} />
-        ))}
-        <Player />
-      </Wrapper>
+      <>
+        <Header />
+        <Wrapper>
+          {this.state.tracks.map(track => (
+            <Track key={track.id} {...track} />
+          ))}
+          <Player />
+        </Wrapper>
+      </>
     )
   }
 
@@ -62,11 +86,25 @@ export class SortIndex extends React.Component<{}, IState> {
         break
       }
     } while (res.data.next_href)
-    alert("取得完了")
+    this.setState({
+      isLoading: false,
+    })
   }
 }
 
 const Wrapper = styled.section`
   display: flex;
   flex-wrap: wrap;
+  padding: 60px 0;
+  justify-content: space-evenly;
+`
+
+const Loading = styled.div`
+  font-size: 5rem;
+  padding: 100px;
+  text-align: center;
+`
+
+const LoadingText = styled.div`
+  font-size: 1.2rem;
 `

@@ -3,6 +3,11 @@ import { ChangeEvent, FormEvent } from "react"
 import { Redirect } from "react-router"
 import LoginToken from "../../lib/loginToken"
 import SoundCloud from "../../lib/SoundCloud4ts/singleton"
+import { Logo } from "../../components/atoms/Logo"
+import styled from "styled-components"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons"
+import Color from "../../style/const/color"
 
 interface IState {
   id: string
@@ -65,8 +70,11 @@ export class TopIndex extends React.Component<{}, IState> {
 
     return (
       <div className="container m-t-5">
-        <div className="row justify-content-md-center">
+        <Row className="row">
           <div className="col-md-5">
+            <LogoWrapper>
+              <Logo size={200} />
+            </LogoWrapper>
             <form onSubmit={this.onSubmit}>
               <p>SoundCloudの認証情報を入力して下さい</p>
               <div className="form-group">
@@ -98,12 +106,14 @@ export class TopIndex extends React.Component<{}, IState> {
                 <br />
                 アプリケーションのOAuthTokenの取得にのみ使用されます
               </small>
-              <button type="submit" className="btn btn-primary">
-                送信
-              </button>
+              <ButtonWrapper>
+                <StyledButton type="submit" className="btn btn-primary">
+                  <FontAwesomeIcon icon={faPaperPlane} /> ログインする
+                </StyledButton>
+              </ButtonWrapper>
             </form>
           </div>
-        </div>
+        </Row>
       </div>
     )
   }
@@ -115,3 +125,30 @@ export class TopIndex extends React.Component<{}, IState> {
     })
   }
 }
+
+const Row = styled.div`
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+`
+
+const LogoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+  > * {
+    background-color: ${Color.WHITE};
+    border: 5px solid ${Color.WHITE};
+    box-sizing: content-box;
+  }
+`
+
+const ButtonWrapper = styled.div`
+  text-align: center;
+`
+
+const StyledButton = styled.button`
+  margin: 20px 0 100px;
+  width: 50%;
+`
