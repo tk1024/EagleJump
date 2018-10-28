@@ -48,7 +48,12 @@ export class SortIndex extends React.Component<{}, IState> {
               <div>
                 <FontAwesomeIcon icon={faSpinner} spin={true} />
               </div>
-              <LoadingText>楽曲読み込み中・・・</LoadingText>
+              <LoadingText>
+                楽曲読み込み中・・・
+                <br />
+                現在: {this.state.tracks.length}
+                曲読み込み完了
+              </LoadingText>
             </Loading>
           </Wrapper>
         </>
