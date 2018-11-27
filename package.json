@@ -2,14 +2,13 @@
   "name": "EagleJump",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://tk1024.github.io/EagleJump",
+  "homepage": "https://eaglejump.netlify.com/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.7",
     "@fortawesome/free-solid-svg-icons": "^5.4.2",
     "@fortawesome/react-fontawesome": "^0.1.3",
     "axios": "^0.18.0",
-    "i": "^0.3.6",
-    "npm": "^6.4.1",
+    "bootstrap-honoka": "^4.1.3",
     "qs": "^6.5.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
@@ -26,8 +25,7 @@
     "eject": "react-scripts-ts eject",
     "predeploy": "npm run build",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
-    "precommit": "pretty-quick --staged",
-    "deploy": "gh-pages -d build"
+    "precommit": "pretty-quick --staged"
   },
   "devDependencies": {
     "@types/jest": "^23.3.7",
@@ -37,8 +35,6 @@
     "@types/react-dom": "^16.0.9",
     "@types/react-redux": "^6.0.9",
     "@types/react-router-dom": "^4.3.1",
-    "bootstrap-honoka": "^4.1.3",
-    "gh-pages": "^1.2.0",
     "husky": "^1.1.2",
     "prettier": "^1.14.3",
     "pretty-quick": "^1.8.0",

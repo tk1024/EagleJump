@@ -8,7 +8,7 @@ import Color from "./style/const/color"
 import { LogoutIndex } from "./pages/logout"
 
 const Routes = () => (
-  <Router basename="/EagleJump/">
+  <Router>
     <Background>
       <Route path="/" exact={true} component={TopIndex} />
       <Route path="/sort" exact={true} component={SortIndex} />
