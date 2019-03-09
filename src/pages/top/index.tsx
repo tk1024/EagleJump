@@ -3,11 +3,13 @@ import { ChangeEvent, FormEvent } from "react"
 import { Redirect } from "react-router"
 import LoginToken from "../../lib/loginToken"
 import SoundCloud from "../../lib/SoundCloud4ts/singleton"
-import { Logo } from "../../components/atoms/Logo"
 import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 import Color from "../../style/const/color"
+import { Logo } from "src/components/atoms/Logo"
+
+type IProps = any
 
 interface IState {
   id: string
@@ -15,10 +17,10 @@ interface IState {
   isAuthenticated: boolean
 }
 
-export class TopIndex extends React.Component<{}, IState> {
+export class TopIndex extends React.Component<IProps, IState> {
   private loginTokenStorage: LoginToken
 
-  constructor(props: any) {
+  constructor(props: IProps) {
     super(props)
     this.state = {
       id: "",
@@ -37,17 +39,15 @@ export class TopIndex extends React.Component<{}, IState> {
     }
   }
 
-  public onChangeId(ev: ChangeEvent) {
-    const el = ev.currentTarget as HTMLInputElement
+  public onChangeId({ currentTarget }: ChangeEvent<HTMLInputElement>) {
     this.setState({
-      id: el.value,
+      id: currentTarget.value,
     })
   }
 
-  public onChangePassword(ev: ChangeEvent) {
-    const el = ev.currentTarget as HTMLInputElement
+  public onChangePassword({ currentTarget }: ChangeEvent<HTMLInputElement>) {
     this.setState({
-      password: el.value,
+      password: currentTarget.value,
     })
   }
 

@@ -1,41 +1,89 @@
 import * as React from "react"
 import styled from "styled-components"
-import { ITrack } from "../../../interface/track"
+import { ITrack } from "src/interface/track"
 import { Dispatch } from "redux"
 import { connect } from "react-redux"
-import { selectedSong } from "../../../actions/player"
+import { selectedSong } from "src/actions/player"
 import { TrackThumbnail } from "../../atoms/track-thumbnail"
 import Color from "../../../style/const/color"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay"
+import { IRootState } from "src/reducers"
+import { faPause } from "@fortawesome/free-solid-svg-icons/faPause"
 
-class Component extends React.Component<ITrack, {}> {
-  constructor(props: any) {
+interface IProps {
+  player: ITrack
+  track: ITrack
+}
+
+interface IState {
+  isHover: boolean
+}
+
+class Component extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props)
-
     this.onClick = this.onClick.bind(this)
+    this.onMouseEnter = this.onMouseEnter.bind(this)
+    this.onMouseLeave = this.onMouseLeave.bind(this)
+    this.isPlaying = this.isPlaying.bind(this)
+    this.state = {
+      isHover: false,
+    }
   }
 
   public render() {
+    const { track } = this.props
     return (
-      <Wrapper onClick={this.onClick}>
+      <Wrapper
+        onClick={this.onClick}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+      >
         <ThumbnailWrapper>
-          <TrackThumbnail size={150} player={this.props} />
+          <TrackThumbnail size={150} player={track} />
           <Duration>{this.formatedDuration()}</Duration>
         </ThumbnailWrapper>
-        <Title title={this.props.title}>{this.props.title}</Title>
-        <Username title={this.props.user.username}>
-          {this.props.user.username}
-        </Username>
+        <Title title={track.title}>{track.title}</Title>
+        <Username title={track.user.username}>{track.user.username}</Username>
+        {this.state.isHover && (
+          <PlayIconWrapper>
+            <PlayIcon />
+          </PlayIconWrapper>
+        )}
+        {this.isPlaying() && (
+          <PlayIconWrapper>
+            <PauseIcon />
+          </PlayIconWrapper>
+        )}
       </Wrapper>
     )
   }
 
+  private isPlaying() {
+    const { player, track } = this.props
+    return player && player.id === track.id
+  }
+
   private onClick(event: React.MouseEvent<HTMLDivElement>) {
-    // @ts-ignore
-    this.props.selectedSong(this.props)
+    // @ts-ignorex
+    this.props.selectedSong(this.props.track)
+  }
+
+  private onMouseEnter() {
+    this.setState({
+      isHover: true,
+    })
+  }
+
+  private onMouseLeave() {
+    this.setState({
+      isHover: false,
+    })
   }
 
   private formatedDuration(): string {
-    const secNum = Math.ceil((this.props.duration || 1) / 1000)
+    const secNum = Math.ceil((this.props.track.duration || 1) / 1000)
     let hours: any = Math.floor(secNum / 3600)
     let minutes: any = Math.floor((secNum - hours * 3600) / 60)
     let seconds: any = secNum - hours * 3600 - minutes * 60
@@ -53,8 +101,10 @@ class Component extends React.Component<ITrack, {}> {
   }
 }
 
-function mapStateToProps(state: any) {
-  return {}
+function mapStateToProps({ player }: IRootState) {
+  return {
+    player,
+  }
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
@@ -71,6 +121,7 @@ export const Track = connect(
 )(Component)
 
 const Wrapper = styled.div`
+  position: relative;
   cursor: pointer;
   display: inline-block;
   overflow: hidden;
@@ -114,4 +165,32 @@ const Username = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+const PlayIconWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${Color.BRAND};
+  border-radius: 100%;
+`
+
+const PlayIcon = styled(FontAwesomeIcon).attrs({
+  icon: faPlay,
+})`
+  font-size: 24px;
+  position: relative;
+  left: 2px;
+`
+
+const PauseIcon = styled(FontAwesomeIcon).attrs({
+  icon: faPause,
+})`
+  font-size: 24px;
+  position: relative;
 `

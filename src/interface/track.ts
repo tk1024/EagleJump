@@ -11,7 +11,7 @@ export interface ITrack {
   sharing?: string
   tag_list?: string
   permalink?: string
-  description?: any
+  description?: string
   streamable?: boolean
   downloadable?: boolean
   genre?: any
