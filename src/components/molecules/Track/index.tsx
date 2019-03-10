@@ -2,20 +2,27 @@ import * as React from "react"
 import { TrackThumbnail } from "../../atoms/track-thumbnail"
 import Color from "../../../style/const/color"
 import { formattedTime } from "src/lib/formatted-time"
-import { container, IContainerStateToProps } from "./container"
+import {
+  ActionDispatcher,
+  IContainerStateToProps,
+} from "src/pages/sort/container"
 import { ITrack } from "src/interface/track"
 import { Icon } from ".//components/icon"
 import styled from "styled-components"
+import { IRootState } from "src/reducers"
 
 type IProps = IContainerStateToProps & {
   track: ITrack
+  play_song_id: IRootState["player"]["id"]
+  isPlaying: IRootState["playerMetaData"]["isPlaying"]
+  actions: ActionDispatcher
 }
 
 interface IState {
   isHover: boolean
 }
 
-class Component extends React.Component<IProps, IState> {
+export class Track extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.onClick = this.onClick.bind(this)
@@ -26,8 +33,22 @@ class Component extends React.Component<IProps, IState> {
     }
   }
 
+  public shouldComponentUpdate(
+    nextProps: Readonly<IProps>,
+    nextState: Readonly<IState>,
+    nextContext: any
+  ): boolean {
+    if (
+      this.props.play_song_id === this.props.track.id ||
+      nextProps.play_song_id === this.props.track.id
+    ) {
+      return true
+    }
+    return false
+  }
+
   public render() {
-    const { track, player, isPlaying } = this.props
+    const { track, isPlaying } = this.props
     return (
       <Wrapper
         onClick={this.onClick}
@@ -41,18 +62,22 @@ class Component extends React.Component<IProps, IState> {
         <Title title={track.title}>{track.title}</Title>
         <Username title={track.user.username}>{track.user.username}</Username>
         <Icon
-          track={track}
           isHover={this.state.isHover}
-          player={player}
           isPlaying={isPlaying}
-          actions={this.props.actions}
+          isPlayingTrack={this.props.track.id === this.props.play_song_id}
         />
       </Wrapper>
     )
   }
 
   private onClick(event: React.MouseEvent<HTMLDivElement>) {
-    this.props.actions.selectedSong(this.props.track)
+    if (this.props.track.id === this.props.play_song_id) {
+      this.props.isPlaying
+        ? this.props.actions.onPause()
+        : this.props.actions.onPlay()
+    } else {
+      this.props.actions.selectedSong(this.props.track)
+    }
   }
 
   private onMouseEnter() {
@@ -67,8 +92,6 @@ class Component extends React.Component<IProps, IState> {
     })
   }
 }
-
-export const Track = container(Component)
 
 const Wrapper = styled.div`
   position: relative;

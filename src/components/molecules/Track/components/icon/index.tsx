@@ -5,30 +5,17 @@ import { IRootState } from "src/reducers"
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay"
 import { faPause } from "@fortawesome/free-solid-svg-icons/faPause"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { ITrack } from "src/interface/track"
-import { IContainerStateToProps } from "src/components/molecules/Track/container"
 
 interface IProps {
-  player: IRootState["player"]
   isPlaying: IRootState["playerMetaData"]["isPlaying"]
-  track: ITrack
   isHover: boolean
-  actions: IContainerStateToProps["actions"]
+  isPlayingTrack: boolean
 }
 
-export const Icon = ({
-  track,
-  player,
-  isPlaying,
-  isHover,
-  actions,
-}: IProps) => {
-  const onClickIcon = () => {
-    isPlaying ? actions.onPause() : actions.onPlay()
-  }
-  if (player && player.id === track.id) {
+export const Icon = ({ isPlaying, isHover, isPlayingTrack }: IProps) => {
+  if (isPlayingTrack) {
     return (
-      <PlayIconWrapper onClick={onClickIcon}>
+      <PlayIconWrapper>
         {isPlaying && <PauseIcon />}
         {!isPlaying && <PlayIcon />}
       </PlayIconWrapper>
