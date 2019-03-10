@@ -9,6 +9,8 @@ import {
 import { RangeSliderWithTime } from "src/components/molecules/player/components/range-slider-with-time"
 import { TrackInformation } from "src/components/molecules/player/components/track-information"
 import { OperationButtons } from "src/components/molecules/player/components/operation-buttons"
+import { ChangeFavicon } from "src/lib/change-favicon"
+import { shortcut } from "src/components/molecules/player/shortcut"
 
 type IProps = IContainerStateToProps
 
@@ -33,6 +35,10 @@ class Component extends React.Component<IProps, IState> {
     this.onPause = this.onPause.bind(this)
   }
 
+  public componentDidMount(): void {
+    shortcut(this.props.actions)
+  }
+
   public componentDidUpdate(
     prevProps: Readonly<IProps>,
     prevState: Readonly<IState>,
@@ -44,6 +50,9 @@ class Component extends React.Component<IProps, IState> {
       this.props.player.title !== prevProps.player.title
     ) {
       document.title = `${this.props.player.title} - EagleJump`
+      ChangeFavicon(
+        this.props.player.artwork_url || this.props.player.user.avatar_url
+      )
     }
     this.checkAndDoIfneededUpdatePlayTime()
     this.checkAndDoIfneededUpdateIsPlaying(prevProps)

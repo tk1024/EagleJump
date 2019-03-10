@@ -90,23 +90,29 @@ const Bg = styled.div`
   background-color: ${Color.DIMGRAY};
 `
 
-const CurrentPosition = styled.div<{
+const CurrentPosition = styled.div.attrs({
+  style: ({ currentPercent }: any) => ({
+    width: `${currentPercent}%`,
+  }),
+})<{
   currentPercent: number
 }>`
   position: absolute;
   top: 14.5px;
   left: 0;
-  width: ${({ currentPercent }) => currentPercent}%;
   height: 1px;
   background-color: ${Color.BRAND};
 `
 
-const Circle = styled.div<{
+const Circle = styled.div.attrs({
+  style: ({ currentPercent }: any) => ({
+    left: `calc(${currentPercent}% - 1.5px)`,
+  }),
+})<{
   currentPercent: number
   isShow: boolean
 }>`
   position: absolute;
-  left: calc(${({ currentPercent }) => currentPercent}% - 1.5px);
   top: 11.5px;
   width: 7px;
   height: 7px;

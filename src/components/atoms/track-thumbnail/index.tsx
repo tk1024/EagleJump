@@ -9,13 +9,15 @@ interface IProps {
 
 export const TrackThumbnail = (props: IProps) => <Thumbnail {...props} />
 
-const Thumbnail = styled.div<IProps>`
+const Thumbnail = styled.div.attrs({
+  style: ({ player }: any) => ({
+    backgroundImage: `url(${player.artwork_url || player.user.avatar_url})`,
+  }),
+})<IProps>`
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  background-image: url(${({ player }) =>
-    player.artwork_url || player.user.avatar_url});
   flex-shrink: 0;
 `

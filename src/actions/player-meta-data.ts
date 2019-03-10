@@ -5,6 +5,7 @@ export enum PlayerMetaDataAction {
   UPDATE_PLAY_TIME = "UPDATE_PLAY_TIME",
   ON_PLAY = "ON_PLAY",
   ON_PAUSE = "ON_PAUSE",
+  ON_TOGGLE = "ON_TOGGLE",
 }
 
 export const updateCurrentTime = (
@@ -35,4 +36,9 @@ export const onPause = () => ({
   data: {
     isPlaying: false,
   },
+})
+
+export const onToggle = () => ({
+  type: PlayerMetaDataAction.ON_TOGGLE,
+  data: {},
 })

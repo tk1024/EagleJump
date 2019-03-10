@@ -1,19 +1,13 @@
 import * as React from "react"
-import styled from "styled-components"
-import { ITrack } from "src/interface/track"
-import { Dispatch } from "redux"
-import { connect } from "react-redux"
-import { selectedSong } from "src/actions/player"
 import { TrackThumbnail } from "../../atoms/track-thumbnail"
 import Color from "../../../style/const/color"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay"
-import { IRootState } from "src/reducers"
-import { faPause } from "@fortawesome/free-solid-svg-icons/faPause"
 import { formattedTime } from "src/lib/formatted-time"
+import { container, IContainerStateToProps } from "./container"
+import { ITrack } from "src/interface/track"
+import { Icon } from ".//components/icon"
+import styled from "styled-components"
 
-interface IProps {
-  player: ITrack
+type IProps = IContainerStateToProps & {
   track: ITrack
 }
 
@@ -27,14 +21,13 @@ class Component extends React.Component<IProps, IState> {
     this.onClick = this.onClick.bind(this)
     this.onMouseEnter = this.onMouseEnter.bind(this)
     this.onMouseLeave = this.onMouseLeave.bind(this)
-    this.isPlaying = this.isPlaying.bind(this)
     this.state = {
       isHover: false,
     }
   }
 
   public render() {
-    const { track } = this.props
+    const { track, player, isPlaying } = this.props
     return (
       <Wrapper
         onClick={this.onClick}
@@ -47,28 +40,19 @@ class Component extends React.Component<IProps, IState> {
         </ThumbnailWrapper>
         <Title title={track.title}>{track.title}</Title>
         <Username title={track.user.username}>{track.user.username}</Username>
-        {this.state.isHover && (
-          <PlayIconWrapper>
-            <PlayIcon />
-          </PlayIconWrapper>
-        )}
-        {this.isPlaying() && (
-          <PlayIconWrapper>
-            <PauseIcon />
-          </PlayIconWrapper>
-        )}
+        <Icon
+          track={track}
+          isHover={this.state.isHover}
+          player={player}
+          isPlaying={isPlaying}
+          actions={this.props.actions}
+        />
       </Wrapper>
     )
   }
 
-  private isPlaying() {
-    const { player, track } = this.props
-    return player && player.id === track.id
-  }
-
   private onClick(event: React.MouseEvent<HTMLDivElement>) {
-    // @ts-ignorex
-    this.props.selectedSong(this.props.track)
+    this.props.actions.selectedSong(this.props.track)
   }
 
   private onMouseEnter() {
@@ -84,24 +68,7 @@ class Component extends React.Component<IProps, IState> {
   }
 }
 
-function mapStateToProps({ player }: IRootState) {
-  return {
-    player,
-  }
-}
-
-function mapDispatchToProps(dispatch: Dispatch) {
-  return {
-    selectedSong(data: ITrack) {
-      dispatch(selectedSong(data))
-    },
-  }
-}
-
-export const Track = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Component)
+export const Track = container(Component)
 
 const Wrapper = styled.div`
   position: relative;
@@ -148,32 +115,4 @@ const Username = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-
-const PlayIconWrapper = styled.div`
-  position: absolute;
-  top: 50px;
-  left: 50px;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${Color.BRAND};
-  border-radius: 100%;
-`
-
-const PlayIcon = styled(FontAwesomeIcon).attrs({
-  icon: faPlay,
-})`
-  font-size: 24px;
-  position: relative;
-  left: 2px;
-`
-
-const PauseIcon = styled(FontAwesomeIcon).attrs({
-  icon: faPause,
-})`
-  font-size: 24px;
-  position: relative;
 `
