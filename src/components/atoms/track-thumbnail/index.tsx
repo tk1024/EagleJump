@@ -17,4 +17,5 @@ const Thumbnail = styled.div<IProps>`
   background-position: center;
   background-image: url(${({ player }) =>
     player.artwork_url || player.user.avatar_url});
+  flex-shrink: 0;
 `

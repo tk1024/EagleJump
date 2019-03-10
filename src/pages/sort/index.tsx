@@ -1,12 +1,13 @@
 import * as React from "react"
 import styled from "styled-components"
-import { Track } from "../../components/molecules/Track"
 import SoundCloud from "../../lib/SoundCloud4ts/singleton"
-import { Player } from "../../components/molecules/player"
-import { ITrack } from "../../interface/track"
+import { Player } from "src/components/molecules/player"
+import { ITrack } from "src/interface/track"
 import { Header } from "./components/header"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { Loading } from "src/pages/sort/components/loading"
+import { Track } from "src/components/molecules/Track"
+
+type IProps = any
 
 interface IState {
   tracks: ITrack[]
@@ -22,8 +23,8 @@ interface IRes {
   statusText: "OK" | string
 }
 
-export class SortIndex extends React.Component<{}, IState> {
-  constructor(props: any) {
+export class SortIndex extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props)
     if (!SoundCloud.oauthToken) {
       location.href = "/"
@@ -39,35 +40,21 @@ export class SortIndex extends React.Component<{}, IState> {
   }
 
   public render() {
-    if (this.state.isLoading) {
-      return (
-        <>
-          <Header />
-          <Wrapper>
-            <Loading>
-              <div>
-                <FontAwesomeIcon icon={faSpinner} spin={true} />
-              </div>
-              <LoadingText>
-                楽曲読み込み中・・・
-                <br />
-                現在: {this.state.tracks.length}
-                曲読み込み完了
-              </LoadingText>
-            </Loading>
-          </Wrapper>
-        </>
-      )
-    }
-
     return (
       <>
         <Header />
         <Wrapper>
-          {this.state.tracks.map(track => (
-            <Track key={track.id} {...track} />
-          ))}
-          <Player />
+          {this.state.isLoading && (
+            <Loading trackLenght={this.state.tracks.length} />
+          )}
+          {!this.state.isLoading && (
+            <>
+              {this.state.tracks.map(track => (
+                <Track key={track.id} track={track} />
+              ))}
+              <Player />
+            </>
+          )}
         </Wrapper>
       </>
     )
@@ -102,14 +89,4 @@ const Wrapper = styled.section`
   flex-wrap: wrap;
   padding: 60px 0;
   justify-content: space-evenly;
-`
-
-const Loading = styled.div`
-  font-size: 5rem;
-  padding: 100px;
-  text-align: center;
-`
-
-const LoadingText = styled.div`
-  font-size: 1.2rem;
 `

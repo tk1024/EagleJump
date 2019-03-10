@@ -1,60 +1,93 @@
 import * as React from "react"
 import styled from "styled-components"
-import { ITrack } from "../../../interface/track"
+import { ITrack } from "src/interface/track"
 import { Dispatch } from "redux"
 import { connect } from "react-redux"
-import { selectedSong } from "../../../actions/player"
+import { selectedSong } from "src/actions/player"
 import { TrackThumbnail } from "../../atoms/track-thumbnail"
 import Color from "../../../style/const/color"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay"
+import { IRootState } from "src/reducers"
+import { faPause } from "@fortawesome/free-solid-svg-icons/faPause"
+import { formattedTime } from "src/lib/formatted-time"
 
-class Component extends React.Component<ITrack, {}> {
-  constructor(props: any) {
+interface IProps {
+  player: ITrack
+  track: ITrack
+}
+
+interface IState {
+  isHover: boolean
+}
+
+class Component extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props)
-
     this.onClick = this.onClick.bind(this)
+    this.onMouseEnter = this.onMouseEnter.bind(this)
+    this.onMouseLeave = this.onMouseLeave.bind(this)
+    this.isPlaying = this.isPlaying.bind(this)
+    this.state = {
+      isHover: false,
+    }
   }
 
   public render() {
+    const { track } = this.props
     return (
-      <Wrapper onClick={this.onClick}>
+      <Wrapper
+        onClick={this.onClick}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+      >
         <ThumbnailWrapper>
-          <TrackThumbnail size={150} player={this.props} />
-          <Duration>{this.formatedDuration()}</Duration>
+          <TrackThumbnail size={150} player={track} />
+          <Duration>{formattedTime(this.props.track.duration / 1000)}</Duration>
         </ThumbnailWrapper>
-        <Title title={this.props.title}>{this.props.title}</Title>
-        <Username title={this.props.user.username}>
-          {this.props.user.username}
-        </Username>
+        <Title title={track.title}>{track.title}</Title>
+        <Username title={track.user.username}>{track.user.username}</Username>
+        {this.state.isHover && (
+          <PlayIconWrapper>
+            <PlayIcon />
+          </PlayIconWrapper>
+        )}
+        {this.isPlaying() && (
+          <PlayIconWrapper>
+            <PauseIcon />
+          </PlayIconWrapper>
+        )}
       </Wrapper>
     )
   }
 
-  private onClick(event: React.MouseEvent<HTMLDivElement>) {
-    // @ts-ignore
-    this.props.selectedSong(this.props)
+  private isPlaying() {
+    const { player, track } = this.props
+    return player && player.id === track.id
   }
 
-  private formatedDuration(): string {
-    const secNum = Math.ceil((this.props.duration || 1) / 1000)
-    let hours: any = Math.floor(secNum / 3600)
-    let minutes: any = Math.floor((secNum - hours * 3600) / 60)
-    let seconds: any = secNum - hours * 3600 - minutes * 60
+  private onClick(event: React.MouseEvent<HTMLDivElement>) {
+    // @ts-ignorex
+    this.props.selectedSong(this.props.track)
+  }
 
-    if (hours < 10) {
-      hours = `0${hours}`
-    }
-    if (minutes < 10) {
-      minutes = `0${minutes}`
-    }
-    if (seconds < 10) {
-      seconds = `0${seconds}`
-    }
-    return `${hours}:${minutes}:${seconds}`
+  private onMouseEnter() {
+    this.setState({
+      isHover: true,
+    })
+  }
+
+  private onMouseLeave() {
+    this.setState({
+      isHover: false,
+    })
   }
 }
 
-function mapStateToProps(state: any) {
-  return {}
+function mapStateToProps({ player }: IRootState) {
+  return {
+    player,
+  }
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
@@ -71,6 +104,7 @@ export const Track = connect(
 )(Component)
 
 const Wrapper = styled.div`
+  position: relative;
   cursor: pointer;
   display: inline-block;
   overflow: hidden;
@@ -114,4 +148,32 @@ const Username = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+const PlayIconWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${Color.BRAND};
+  border-radius: 100%;
+`
+
+const PlayIcon = styled(FontAwesomeIcon).attrs({
+  icon: faPlay,
+})`
+  font-size: 24px;
+  position: relative;
+  left: 2px;
+`
+
+const PauseIcon = styled(FontAwesomeIcon).attrs({
+  icon: faPause,
+})`
+  font-size: 24px;
+  position: relative;
 `

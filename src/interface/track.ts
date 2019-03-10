@@ -11,7 +11,7 @@ export interface ITrack {
   sharing?: string
   tag_list?: string
   permalink?: string
-  description?: any
+  description?: string
   streamable?: boolean
   downloadable?: boolean
   genre?: any
@@ -63,4 +63,16 @@ export interface ITrack {
     | "other"
     | ""
     | null
+  label?: ILabel
+}
+
+interface ILabel {
+  id: number
+  kind: string
+  permalink: string
+  username: string
+  last_modified: string
+  uri: string
+  permalink_url: string
+  avatar_url: string
 }
