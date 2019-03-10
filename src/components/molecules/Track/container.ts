@@ -1,32 +1,18 @@
 import { connect } from "react-redux"
-import { Action, Dispatch } from "redux"
-import {
-  updateCurrentTime,
-  updatePlayTime,
-  onPause,
-  onPlay,
-  onToggle,
-} from "src/actions/player-meta-data"
-import { IPlayerMetaData } from "src/reducers/player-meta-data"
 import { IRootState } from "src/reducers"
-import { selectedSong } from "src/actions/player"
+import { Action, Dispatch } from "redux"
+import { onPause, onPlay } from "src/actions/player-meta-data"
 import { ITrack } from "src/interface/track"
+import { selectedSong } from "src/actions/player"
 
 export interface IContainerStateToProps {
   player: IRootState["player"]
-  playerMetaData: IRootState["playerMetaData"]
+  isPlaying: IRootState["playerMetaData"]["isPlaying"]
   actions: ActionDispatcher
 }
 
 export class ActionDispatcher {
   constructor(private dispatch: (action: Action) => void) {}
-
-  public updateCurrentTime(newTime: IPlayerMetaData["currentTime"]) {
-    this.dispatch(updateCurrentTime(newTime))
-  }
-  public updatePlayTime(newTime: IPlayerMetaData["updatePlayTime"]) {
-    this.dispatch(updatePlayTime(newTime))
-  }
 
   public selectedSong(data: ITrack) {
     this.dispatch(selectedSong(data))
@@ -39,15 +25,11 @@ export class ActionDispatcher {
   public onPause() {
     this.dispatch(onPause())
   }
-
-  public onToggle() {
-    this.dispatch(onToggle())
-  }
 }
 
 const mapStateToProps = ({ player, playerMetaData }: IRootState) => ({
   player,
-  playerMetaData,
+  isPlaying: playerMetaData.isPlaying,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({

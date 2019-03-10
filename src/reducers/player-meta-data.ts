@@ -22,6 +22,10 @@ export default function PlayerMetaDataReducer(
     case PlayerMetaDataAction.ON_PAUSE:
     case PlayerMetaDataAction.ON_PLAY:
       return Object.assign({}, state, action.data)
+    case PlayerMetaDataAction.ON_TOGGLE:
+      return Object.assign({}, state, {
+        isPlaying: !state.isPlaying,
+      })
     default:
       return state
   }
