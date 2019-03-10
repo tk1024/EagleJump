@@ -44,6 +44,9 @@ export class Track extends React.Component<IProps, IState> {
     ) {
       return true
     }
+    if (this.state.isHover !== nextState.isHover) {
+      return true
+    }
     return false
   }
 
