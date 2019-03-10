@@ -6,8 +6,9 @@ import { ITrack } from "src/interface/track"
 import { Header } from "./components/header"
 import { Loading } from "src/pages/sort/components/loading"
 import { Track } from "src/components/molecules/Track"
+import { container, IContainerStateToProps } from "src/pages/sort/container"
 
-type IProps = any
+type IProps = IContainerStateToProps
 
 interface IState {
   tracks: ITrack[]
@@ -23,7 +24,7 @@ interface IRes {
   statusText: "OK" | string
 }
 
-export class SortIndex extends React.Component<IProps, IState> {
+class Component extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     if (!SoundCloud.oauthToken) {
@@ -50,7 +51,13 @@ export class SortIndex extends React.Component<IProps, IState> {
           {!this.state.isLoading && (
             <>
               {this.state.tracks.map(track => (
-                <Track key={track.id} track={track} />
+                <Track
+                  key={track.id}
+                  track={track}
+                  play_song_id={this.props.play_song_id}
+                  isPlaying={this.props.isPlaying}
+                  actions={this.props.actions}
+                />
               ))}
               <Player />
             </>
@@ -83,6 +90,8 @@ export class SortIndex extends React.Component<IProps, IState> {
     })
   }
 }
+
+export const SortIndex = container(Component)
 
 const Wrapper = styled.section`
   display: flex;

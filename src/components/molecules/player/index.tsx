@@ -14,11 +14,7 @@ import { shortcut } from "src/components/molecules/player/shortcut"
 
 type IProps = IContainerStateToProps
 
-interface IState {
-  isPlaying: false
-}
-
-class Component extends React.Component<IProps, IState> {
+class Component extends React.Component<IProps> {
   private audio = React.createRef<HTMLAudioElement>()
 
   constructor(props: IProps) {
@@ -39,11 +35,7 @@ class Component extends React.Component<IProps, IState> {
     shortcut(this.props.actions)
   }
 
-  public componentDidUpdate(
-    prevProps: Readonly<IProps>,
-    prevState: Readonly<IState>,
-    snapshot?: any
-  ): void {
+  public componentDidUpdate(prevProps: Readonly<IProps>): void {
     // TODO: タイトル更新用のReduxのアレをアレするようにする
     if (
       prevProps.player &&

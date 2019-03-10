@@ -6,7 +6,7 @@ import { ITrack } from "src/interface/track"
 import { selectedSong } from "src/actions/player"
 
 export interface IContainerStateToProps {
-  player: IRootState["player"]
+  play_song_id: IRootState["player"]["id"]
   isPlaying: IRootState["playerMetaData"]["isPlaying"]
   actions: ActionDispatcher
 }
@@ -28,7 +28,7 @@ export class ActionDispatcher {
 }
 
 const mapStateToProps = ({ player, playerMetaData }: IRootState) => ({
-  player,
+  play_song_id: player.id || null,
   isPlaying: playerMetaData.isPlaying,
 })
 
