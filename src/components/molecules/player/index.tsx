@@ -1,69 +1,136 @@
 import * as React from "react"
 import styled, { keyframes } from "styled-components"
 import Color from "../../../style/const/color"
-import { connect } from "react-redux"
-import { ITrack } from "../../../interface/track"
 import SoundCloud from "../../../lib/SoundCloud4ts/singleton"
-import { TrackThumbnail } from "../../atoms/track-thumbnail"
+import {
+  container,
+  IContainerStateToProps,
+} from "src/components/molecules/player/container"
+import { RangeSliderWithTime } from "src/components/molecules/player/components/range-slider-with-time"
+import { TrackInformation } from "src/components/molecules/player/components/track-information"
+import { OperationButtons } from "src/components/molecules/player/components/operation-buttons"
 
-interface IProps extends ITrack {
-  player?: ITrack
-}
+type IProps = IContainerStateToProps
 
 interface IState {
   isPlaying: false
 }
 
 class Component extends React.Component<IProps, IState> {
-  constructor(props: any) {
+  private audio = React.createRef<HTMLAudioElement>()
+
+  constructor(props: IProps) {
     super(props)
+    this.onTimeUpdate = this.onTimeUpdate.bind(this)
+    this.onPlayTimeUpdate = this.onPlayTimeUpdate.bind(this)
+    this.checkAndDoIfneededUpdatePlayTime = this.checkAndDoIfneededUpdatePlayTime.bind(
+      this
+    )
+    this.checkAndDoIfneededUpdateIsPlaying = this.checkAndDoIfneededUpdateIsPlaying.bind(
+      this
+    )
+    this.onPlay = this.onPlay.bind(this)
+    this.onPause = this.onPause.bind(this)
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(
+    prevProps: Readonly<IProps>,
+    prevState: Readonly<IState>,
+    snapshot?: any
+  ): void {
     // TODO: タイトル更新用のReduxのアレをアレするようにする
-    if (this.props.player) {
+    if (
+      prevProps.player &&
+      this.props.player.title !== prevProps.player.title
+    ) {
       document.title = `${this.props.player.title} - EagleJump`
     }
+    this.checkAndDoIfneededUpdatePlayTime()
+    this.checkAndDoIfneededUpdateIsPlaying(prevProps)
   }
 
   public render() {
-    if (!this.props.player) {
-      return <></>
+    const { player, playerMetaData } = this.props
+    if (!(player && player.stream_url)) {
+      return null
     }
-    if (!this.props.player.stream_url) {
-      return
-    }
-    const { player } = this.props
     return (
-      <Wrapper>
-        <Info>
-          <TrackThumbnail size={60} player={player} />
-          <InfoText>
-            <UserName href={player.user.permalink_url} target="_blank">
-              {player.user.username}
-            </UserName>
-            <Title href={player.permalink_url} target="_blank">
-              {player.title}
-            </Title>
-          </InfoText>
-        </Info>
+      <>
+        <Wrapper>
+          <OperationButtons />
+          <RangeSliderWithTime
+            totalTime={player.duration}
+            currentTime={playerMetaData.currentTime}
+            selectedPosition={this.onPlayTimeUpdate}
+          />
+          <TrackInformation player={player} />
+        </Wrapper>
         <audio
           src={`${player.stream_url}?oauth_token=${SoundCloud.oauthToken}`}
-          controls={true}
           autoPlay={true}
+          onTimeUpdate={this.onTimeUpdate}
+          ref={this.audio}
+          onPlay={this.onPlay}
+          onPause={this.onPause}
         />
-      </Wrapper>
+      </>
     )
   }
-}
 
-function mapStateToProps({ player }: any) {
-  return {
-    player,
+  private onTimeUpdate(): void {
+    if (this.audio.current) {
+      this.props.actions.updateCurrentTime(this.audio.current.currentTime)
+    }
+  }
+
+  private onPlayTimeUpdate(selectedPositionPercent: number): void {
+    const newTime =
+      ((selectedPositionPercent / 100) * this.props.player.duration) / 1000
+    this.props.actions.updatePlayTime(newTime)
+  }
+
+  private checkAndDoIfneededUpdatePlayTime(): void {
+    if (this.props.playerMetaData.updatePlayTime !== null) {
+      if (!this.audio.current) {
+        return
+      }
+      this.audio.current.currentTime = this.props.playerMetaData.updatePlayTime
+      this.props.actions.updateCurrentTime(
+        this.props.playerMetaData.updatePlayTime
+      )
+      this.props.actions.updatePlayTime(null)
+    }
+  }
+
+  private checkAndDoIfneededUpdateIsPlaying(prevProps: IProps): void {
+    if (!this.audio.current) {
+      return
+    }
+    if (
+      prevProps.playerMetaData.isPlaying === this.props.playerMetaData.isPlaying
+    ) {
+      return
+    }
+    if (this.audio.current.paused === !this.props.playerMetaData.isPlaying) {
+      return
+    }
+    if (this.props.playerMetaData.isPlaying) {
+      this.audio.current.play()
+    } else {
+      this.audio.current.pause()
+    }
+  }
+
+  private onPlay() {
+    this.props.actions.onPlay()
+  }
+
+  private onPause() {
+    this.props.actions.onPause()
   }
 }
 
-export const Player = connect(mapStateToProps)(Component)
+export const Player = container(Component)
 
 const slideIn = keyframes`
   from {
@@ -88,32 +155,5 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 0 20px;
   animation: ${slideIn} 0.3s ease-out forwards;
-`
-
-const Info = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const InfoText = styled.div`
-  padding-left: 10px;
-  display: flex;
-  flex-direction: column;
-`
-
-const UserName = styled.a`
   color: ${Color.DIMGRAY};
-  font-size: 0.8rem;
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
-`
-
-const Title = styled.a`
-  color: ${Color.LIGHT_BLACK};
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
 `

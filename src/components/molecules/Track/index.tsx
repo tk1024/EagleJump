@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay"
 import { IRootState } from "src/reducers"
 import { faPause } from "@fortawesome/free-solid-svg-icons/faPause"
+import { formattedTime } from "src/lib/formatted-time"
 
 interface IProps {
   player: ITrack
@@ -42,7 +43,7 @@ class Component extends React.Component<IProps, IState> {
       >
         <ThumbnailWrapper>
           <TrackThumbnail size={150} player={track} />
-          <Duration>{this.formatedDuration()}</Duration>
+          <Duration>{formattedTime(this.props.track.duration / 1000)}</Duration>
         </ThumbnailWrapper>
         <Title title={track.title}>{track.title}</Title>
         <Username title={track.user.username}>{track.user.username}</Username>
@@ -80,24 +81,6 @@ class Component extends React.Component<IProps, IState> {
     this.setState({
       isHover: false,
     })
-  }
-
-  private formatedDuration(): string {
-    const secNum = Math.ceil((this.props.track.duration || 1) / 1000)
-    let hours: any = Math.floor(secNum / 3600)
-    let minutes: any = Math.floor((secNum - hours * 3600) / 60)
-    let seconds: any = secNum - hours * 3600 - minutes * 60
-
-    if (hours < 10) {
-      hours = `0${hours}`
-    }
-    if (minutes < 10) {
-      minutes = `0${minutes}`
-    }
-    if (seconds < 10) {
-      seconds = `0${seconds}`
-    }
-    return `${hours}:${minutes}:${seconds}`
   }
 }
 
