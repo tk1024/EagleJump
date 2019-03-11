@@ -11,6 +11,8 @@ import { TrackInformation } from "src/components/molecules/player/components/tra
 import { OperationButtons } from "src/components/molecules/player/components/operation-buttons"
 import { ChangeFavicon } from "src/lib/change-favicon"
 import { shortcut } from "src/components/molecules/player/shortcut"
+import { AudioSlider } from "src/components/molecules/player/components/audio-slider"
+import { IPlayerMetaData } from "src/reducers/player-meta-data"
 
 type IProps = IContainerStateToProps
 
@@ -29,6 +31,7 @@ class Component extends React.Component<IProps> {
     )
     this.onPlay = this.onPlay.bind(this)
     this.onPause = this.onPause.bind(this)
+    this.onChangeVolume = this.onChangeVolume.bind(this)
   }
 
   public componentDidMount(): void {
@@ -48,6 +51,7 @@ class Component extends React.Component<IProps> {
     }
     this.checkAndDoIfneededUpdatePlayTime()
     this.checkAndDoIfneededUpdateIsPlaying(prevProps)
+    this.checkAndDoIfneededUpdateVolume()
   }
 
   public render() {
@@ -63,6 +67,11 @@ class Component extends React.Component<IProps> {
             totalTime={player.duration}
             currentTime={playerMetaData.currentTime}
             selectedPosition={this.onPlayTimeUpdate}
+          />
+          <AudioSlider
+            onChangeVolume={this.onChangeVolume}
+            volume={playerMetaData.volume}
+            muted={this.props.playerMetaData.muted}
           />
           <TrackInformation player={player} />
         </Wrapper>
@@ -122,12 +131,27 @@ class Component extends React.Component<IProps> {
     }
   }
 
+  private checkAndDoIfneededUpdateVolume(): void {
+    if (!this.audio.current) {
+      return
+    }
+    if (this.props.playerMetaData.muted) {
+      this.audio.current.volume = 0
+      return
+    }
+    this.audio.current.volume = this.props.playerMetaData.volume / 100
+  }
+
   private onPlay() {
     this.props.actions.onPlay()
   }
 
   private onPause() {
     this.props.actions.onPause()
+  }
+
+  private onChangeVolume(newVolume: IPlayerMetaData["volume"]) {
+    this.props.actions.onChangeVolume(newVolume)
   }
 }
 

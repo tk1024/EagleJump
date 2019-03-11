@@ -6,6 +6,11 @@ import {
   onPause,
   onPlay,
   onToggle,
+  onChangeVolume,
+  onVolumeUp,
+  onVolumeDown,
+  onToggleMute,
+  updatePlayTimeFromCurrent,
 } from "src/actions/player-meta-data"
 import { IPlayerMetaData } from "src/reducers/player-meta-data"
 import { IRootState } from "src/reducers"
@@ -24,8 +29,13 @@ export class ActionDispatcher {
   public updateCurrentTime(newTime: IPlayerMetaData["currentTime"]) {
     this.dispatch(updateCurrentTime(newTime))
   }
+
   public updatePlayTime(newTime: IPlayerMetaData["updatePlayTime"]) {
     this.dispatch(updatePlayTime(newTime))
+  }
+
+  public updatePlayTimeFromCurrent(sec: number) {
+    this.dispatch(updatePlayTimeFromCurrent(sec))
   }
 
   public selectedSong(data: ITrack) {
@@ -42,6 +52,22 @@ export class ActionDispatcher {
 
   public onToggle() {
     this.dispatch(onToggle())
+  }
+
+  public onToggleMute() {
+    this.dispatch(onToggleMute())
+  }
+
+  public onChangeVolume(newVolume: IPlayerMetaData["volume"]) {
+    this.dispatch(onChangeVolume(newVolume))
+  }
+
+  public onVolumeUp() {
+    this.dispatch(onVolumeUp())
+  }
+
+  public onVolumeDown() {
+    this.dispatch(onVolumeDown())
   }
 }
 
