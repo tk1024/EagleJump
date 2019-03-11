@@ -32,7 +32,7 @@ class Component extends React.Component<IProps, IState> {
     }
     this.state = {
       tracks: [],
-      isLoading: true,
+      isLoading: false,
     }
   }
 

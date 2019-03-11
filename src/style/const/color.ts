@@ -6,6 +6,7 @@ enum Color {
   DIMGRAY = "#888",
   GRAY = "#ccc",
   LIGHT_GRAY = "#fafafa",
+  TRANSPARENT = "transparent",
 }
 
 export default Color
